@@ -14,4 +14,9 @@ public class Items
         Quantity = quantity;
         Tier = tier;
     }
+    //overide ToString() to return the name of the item
+    public override string ToString()
+    {
+        return Name;
+    }
 }
