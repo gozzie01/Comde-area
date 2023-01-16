@@ -16,4 +16,13 @@ public class Room
         Enemies = enemies;
         Players = players;
     }
+    public Room(string name, string description, int exits)
+    {
+        Name = name;
+        Description = description;
+        Exits = exits;
+        Objects = new Object[0];
+        Enemies = new List<Enemy>();
+        Players = new List<Player>();
+    }
 }

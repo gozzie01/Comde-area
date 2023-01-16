@@ -8,4 +8,4 @@ public class Weapon : Items
         Damage = damage;
         Heavy = heavy;
     }
-}
+} 

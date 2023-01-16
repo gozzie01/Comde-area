@@ -26,66 +26,65 @@ public class Dungeon
         //the first room should always be center left
         layout[0, _Rooms.GetLength(1) / 2] = true;
         //generate a random number for the number of rooms
-        int numRooms = _Rand.Next(_Area/4, _Area);
+        int numRooms = _Rand.Next(_Area/4, _Area/2);
         List<Tuple<int,int>> generatedRoomsXY = new List<Tuple<int,int>>();
-        generatedRoomsXY.Append(new Tuple<int,int>(0, _Rooms.GetLength(1) / 2));
+        generatedRoomsXY.Add(new Tuple<int, int>(0, _Rooms.GetLength(1) / 2));
         while(generatedRoomsXY.Count<numRooms)
         {
             //pick a random room in the layout
-            Tuple<int,int> room = generatedRoomsXY[_Rand.Next(0, generatedRoomsXY.Count)];
+            Tuple<int,int> room = generatedRoomsXY[(int)Math.Floor(_Rand.NextDouble()*generatedRoomsXY.Count)];
             //pick a random direction
-            int direction = _Rand.Next(0, 4);
+            int direction = _Rand.Next(0, 10);
             //check if the room in that direction is already generated
-            if(direction==0)
+            if (direction == 0 && room.Item2-1 >= 0)
             {
                 //check if the room is already generated
-                if(!layout[room.Item1, room.Item2-1])
+                if (!layout[room.Item1, room.Item2-1])
                 {
                     //generate the room
                     layout[room.Item1, room.Item2-1] = true;
-                    generatedRoomsXY.Append(new Tuple<int,int>(room.Item1, room.Item2-1));
+                    generatedRoomsXY.Add(new Tuple<int,int>(room.Item1, room.Item2-1));
                 }
             }
-            else if(direction==1)
+            else if (direction == 1 && room.Item1+1 < _Rooms.GetLength(0))
             {
                 //check if the room is already generated
-                if(!layout[room.Item1+1, room.Item2])
+                if (!layout[room.Item1+1, room.Item2])
                 {
-                    //check if the room is in bounds
-                    if(room.Item1+1<_Rooms.GetLength(0))
-                    {
                         //generate the room
                         layout[room.Item1+1, room.Item2] = true;
-                        generatedRoomsXY.Append(new Tuple<int,int>(room.Item1+1, room.Item2));
-                    }
+                        generatedRoomsXY.Add(new Tuple<int,int>(room.Item1+1, room.Item2));
                 }
             }
-            else if(direction==2)
+            else if (direction == 2 && room.Item2+1 < _Rooms.GetLength(1))
             {
                 //check if the room is already generated
-                if(!layout[room.Item1, room.Item2+1])
+                if (!layout[room.Item1, room.Item2+1])
                 {
-                    //check if the room is in bounds
-                    if(room.Item2+1<_Rooms.GetLength(1))
-                    {
                         //generate the room
                         layout[room.Item1, room.Item2+1] = true;
-                        generatedRoomsXY.Append(new Tuple<int,int>(room.Item1, room.Item2+1));
-                    }
+                        generatedRoomsXY.Add(new Tuple<int,int>(room.Item1, room.Item2+1));
+                    
                 }
             }
-            else if(direction==3)
+            else if (direction == 3 && room.Item1-1 >= 0)
             {
                 //check if the room is already generated
-                if(!layout[room.Item1-1, room.Item2])
+                if (!layout[room.Item1-1, room.Item2])
                 {
-                    //check if the room is in bounds
-                    if(room.Item1-1>=0)
-                    {
                         //generate the room
                         layout[room.Item1-1, room.Item2] = true;
-                        generatedRoomsXY.Append(new Tuple<int,int>(room.Item1-1, room.Item2));
-                    }
+                        generatedRoomsXY.Add(new Tuple<int,int>(room.Item1-1, room.Item2));
+                }
+            }
+            else if (direction >= 5 && room.Item1+1 < _Rooms.GetLength(0))
+            {
+                //check if the room is already generated
+                if (!layout[room.Item1+1, room.Item2])
+                {
+                        //generate the room
+                        layout[room.Item1+1, room.Item2] = true;
+                        generatedRoomsXY.Add(new Tuple<int,int>(room.Item1+1, room.Item2));
                 }
             }
         }
@@ -134,8 +133,8 @@ public class Dungeon
                 }
             }
         }
-
     }
+
     public Room GetRoom(int x, int y)
     {
         return _Rooms[x,y];
@@ -173,6 +172,7 @@ public class Dungeon
                             doors++;
                         }
                     }
+                    Console.Write(doors);
                 }
                 else
                 {
