@@ -313,6 +313,9 @@ public class Player : Entity
         Console.WriteLine("Weapon: " + _Weapon);
         Console.WriteLine("Potion: " + _Potion);
         Console.WriteLine("Armour: " + _Armour[0] + " " + _Armour[1] + " " + _Armour[2]);
-        Console.WriteLine("Inventory: " + _Inventory[0] + " " + _Inventory[1] + " " + _Inventory[2] + " " + _Inventory[3] + " " + _Inventory[4] + " " + _Inventory[5] + " " + _Inventory[6] + " " + _Inventory[7] + " " + _Inventory[8] + " " + _Inventory[9]);
+        for (int i = 0; i < _Inventory.Length; i++)
+        {
+            Console.WriteLine("Inventory: " + _Inventory[i]);
+        }
     }
 }
