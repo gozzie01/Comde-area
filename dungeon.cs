@@ -1,59 +1,185 @@
 namespace RPG;
 public class Dungeon
 {
-    public Room[,] Rooms { get; set; }
-    public Dungeon(Room[,] rooms)
+    //this class is used for the dungeon
+    //the dungeon should be represented as a 2d array of rooms
+    //the dungeon should be able to be generated randomly
+    //the dungeon should be coherent, if you go through the left door 4 times you should end up in the same room
+    private Room[,] _Rooms;
+    private Random _Rand = new Random();
+    private int _Width;
+    private int _Height;
+    private int _Area;
+    public Dungeon(int width, int height)
     {
-        Rooms = rooms;
+        _Width = width;
+        _Height = height;
+        _Area = width * height;
+        _Rooms = new Room[width, height];
     }
-    public void PrintRoom(int x, int y)
+    public void Generate()
     {
-        Console.WriteLine(Rooms[x, y].Name);
-        Console.WriteLine(Rooms[x, y].Description);
-        Console.WriteLine("Exits: " + string.Join(", ", Rooms[x, y].Exits));
-    }
-    public void generate(int rooms, int width = 10, int height = 10)
-    {
-        //rooms need to be connected by doors
-        //rooms do not need to have a name
-        //rooms do not need to have a description
-        //rooms do need to have an exit, rooms can have multiple exits but they must be connected to another room
-        //rooms need to generate from a starting room which is the center left room
-        //rooms need to be generated from the starting room
-        //create a 2d array of rooms
-        Rooms = new Room[width, height];
-        //create a random number generator
-        Random random = new Random();
-        //create exits randomly by generateing a number between 0 and 15 then setting the 4th bit to 0 if the number is then 0 regenerate the number
-        //create the starting room
-        bool generating = true;
-        int exits = random.Next(0, 15);
-        while (exits == 8)
+        //generate the dungeon
+        //generate a layout
+        bool[,] layout = new bool[_Rooms.GetLength(0), _Rooms.GetLength(1)];
+        //the every room in the layout must have a connection to the first room 
+        //the first room should always be center left
+        layout[0, _Rooms.GetLength(1) / 2] = true;
+        //generate a random number for the number of rooms
+        int numRooms = _Rand.Next(_Area/4, _Area);
+        List<Tuple<int,int>> generatedRoomsXY = new List<Tuple<int,int>>();
+        generatedRoomsXY.Append(new Tuple<int,int>(0, _Rooms.GetLength(1) / 2));
+        while(generatedRoomsXY.Count<numRooms)
         {
-            exits = random.Next(0, 15);
-        }
-        if (exits > 8)
-        {
-            exits -= 8;
-        }
-        int x = 0;
-        int y = height / 2;
-        Rooms[x, y] = new Room("Starting Room", "This is the starting room", exits, new Object[] { }, new List<Enemy> { }, new List<Player> { });
-        //create the rest of the rooms
-        while(generating)
-        {
-            //generate a room on the side of the current room that has an exit
-            //create exits randomly by generateing a number between 0 and 15 then setting the required bit to align the exit to the current room
-            //if the room is on the edge of the map then there musnt be an exit in that direction
-            if(exits == 1)
+            //pick a random room in the layout
+            Tuple<int,int> room = generatedRoomsXY[_Rand.Next(0, generatedRoomsXY.Count)];
+            //pick a random direction
+            int direction = _Rand.Next(0, 4);
+            //check if the room in that direction is already generated
+            if(direction==0)
             {
-                //create a room above the current room
-                exits = random.Next(0, 15);
-                
+                //check if the room is already generated
+                if(!layout[room.Item1, room.Item2-1])
+                {
+                    //generate the room
+                    layout[room.Item1, room.Item2-1] = true;
+                    generatedRoomsXY.Append(new Tuple<int,int>(room.Item1, room.Item2-1));
+                }
             }
-
+            else if(direction==1)
+            {
+                //check if the room is already generated
+                if(!layout[room.Item1+1, room.Item2])
+                {
+                    //check if the room is in bounds
+                    if(room.Item1+1<_Rooms.GetLength(0))
+                    {
+                        //generate the room
+                        layout[room.Item1+1, room.Item2] = true;
+                        generatedRoomsXY.Append(new Tuple<int,int>(room.Item1+1, room.Item2));
+                    }
+                }
+            }
+            else if(direction==2)
+            {
+                //check if the room is already generated
+                if(!layout[room.Item1, room.Item2+1])
+                {
+                    //check if the room is in bounds
+                    if(room.Item2+1<_Rooms.GetLength(1))
+                    {
+                        //generate the room
+                        layout[room.Item1, room.Item2+1] = true;
+                        generatedRoomsXY.Append(new Tuple<int,int>(room.Item1, room.Item2+1));
+                    }
+                }
+            }
+            else if(direction==3)
+            {
+                //check if the room is already generated
+                if(!layout[room.Item1-1, room.Item2])
+                {
+                    //check if the room is in bounds
+                    if(room.Item1-1>=0)
+                    {
+                        //generate the room
+                        layout[room.Item1-1, room.Item2] = true;
+                        generatedRoomsXY.Append(new Tuple<int,int>(room.Item1-1, room.Item2));
+                    }
+                }
+            }
+        }
+        //generate the rooms and doors
+        for(int x=0; x<_Rooms.GetLength(0); x++)
+        {
+            for(int y=0; y<_Rooms.GetLength(1); y++)
+            {
+                if(layout[x,y])
+                {
+                    //generate the room
+                    _Rooms[x,y] = new Room("Room", "A room", 0);
+                    //generate the doors
+                    if(x>0)
+                    {
+                        if(layout[x-1,y])
+                        {
+                            //generate a door to the left
+                            _Rooms[x,y].Exits = Bin.SetBit(_Rooms[x,y].Exits, 0);
+                        }
+                    }
+                    if(x<_Rooms.GetLength(0)-1)
+                    {
+                        if(layout[x+1,y])
+                        {
+                            //generate a door to the right
+                            _Rooms[x,y].Exits = Bin.SetBit(_Rooms[x,y].Exits, 1);
+                        }
+                    }
+                    if(y>0)
+                    {
+                        if(layout[x,y-1])
+                        {
+                            //generate a door to the top
+                            _Rooms[x,y].Exits = Bin.SetBit(_Rooms[x,y].Exits, 2);
+                        }
+                    }
+                    if(y<_Rooms.GetLength(1)-1)
+                    {
+                        if(layout[x,y+1])
+                        {
+                            //generate a door to the bottom
+                            _Rooms[x,y].Exits = Bin.SetBit(_Rooms[x,y].Exits, 3);
+                        }
+                    }
+                }
+            }
         }
 
-
+    }
+    public Room GetRoom(int x, int y)
+    {
+        return _Rooms[x,y];
+    }
+    public Room GetRoom(int index)
+    {
+        return _Rooms[index % _Width, index / _Width];
+    }
+    public int GetWidth()
+    {
+        return _Width;
+    }
+    public int GetHeight()
+    {
+        return _Height;
+    }
+    public int GetArea()
+    {
+        return _Area;
+    }
+    public void printDungeon()
+    {
+        for(int y=0; y<_Rooms.GetLength(1); y++)
+        {
+            for(int x=0; x<_Rooms.GetLength(0); x++)
+            {
+                if(_Rooms[x,y]!=null)
+                {
+                    //print the number of doors
+                    int doors = 0;
+                    for(int i=0; i<4; i++)
+                    {
+                        if(Bin.GetBit(_Rooms[x,y].Exits, i))
+                        {
+                            doors++;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.Write(" ");
+                }
+            }
+            Console.WriteLine();
+        }
     }
 }

@@ -26,6 +26,12 @@ public class Program
         player.AddItem(new Items("apple", 10, 1, 1, 1));
         //print out the stats
         player.printStats();
+        
+        //test the dungeon class
+        Dungeon dungeon = new Dungeon(10, 10);
+        dungeon.Generate();
+        dungeon.printDungeon();
+
 
     }
 }
