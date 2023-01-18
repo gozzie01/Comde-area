@@ -6,13 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Riptide;
 using Encoding = System.Text.Encoding;
+using System.IO;
+using System.Threading;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Collections;
+using System.Text.Json;
 public class Program
 {
     public static void Main(string[] args)
     {
         //just print out hello world
         Console.WriteLine("Hello World!");
-        test();
+        Client client = new Client();
+        client.Play();
+        
     }
     public static void test()
     {
