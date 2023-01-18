@@ -122,7 +122,7 @@ public class Dungeon
                     {
                         if(layout[x,y-1])
                         {
-                            //generate a door to the top
+                            //generate a door to the bottom
                             _Rooms[x,y].Exits = Bin.SetBit(_Rooms[x,y].Exits, 2);
                         }
                     }
@@ -130,7 +130,7 @@ public class Dungeon
                     {
                         if(layout[x,y+1])
                         {
-                            //generate a door to the bottom
+                            //generate a door to the top
                             _Rooms[x,y].Exits = Bin.SetBit(_Rooms[x,y].Exits, 3);
                         }
                     }
@@ -238,5 +238,61 @@ public class Dungeon
             }
         }
         return null;
+    }
+    public void movePlayer(int ID, int direction)
+    {
+        for(int i=0; i<_Players.Count; i++)
+        {
+            if(_Players[i].ID == ID)
+            {
+                //check if the player can move in that direction
+                if(Bin.GetBit(_Rooms[_PlayerLocations[i].Item1, _PlayerLocations[i].Item2].Exits, direction))
+                {
+                    //remove the player from the current room
+                    _Rooms[_PlayerLocations[i].Item1, _PlayerLocations[i].Item2].Players.Remove(_Players[i]);
+                    //move the player
+                    if(direction == 0)
+                    {
+                        _PlayerLocations[i] = new Tuple<int,int>(_PlayerLocations[i].Item1-1, _PlayerLocations[i].Item2);
+                    }
+                    else if(direction == 1)
+                    {
+                        _PlayerLocations[i] = new Tuple<int,int>(_PlayerLocations[i].Item1+1, _PlayerLocations[i].Item2);
+                    }
+                    else if(direction == 2)
+                    {
+                        _PlayerLocations[i] = new Tuple<int,int>(_PlayerLocations[i].Item1, _PlayerLocations[i].Item2-1);
+                    }
+                    else if(direction == 3)
+                    {
+                        _PlayerLocations[i] = new Tuple<int,int>(_PlayerLocations[i].Item1, _PlayerLocations[i].Item2+1);
+                    }
+                    //add the player to the new room
+                    _Rooms[_PlayerLocations[i].Item1, _PlayerLocations[i].Item2].Players.Add(_Players[i]);
+                }
+            }
+        }
+    }
+    //get x size
+    //get y size
+    public int getXsize()
+    {
+        return _Rooms.GetLength(0);
+    }
+    public int getYsize()
+    {
+        return _Rooms.GetLength(1);
+    }
+    public void removePlayer(int ID)
+    {
+        for(int i=0; i<_Players.Count; i++)
+        {
+            if(_Players[i].ID == ID)
+            {
+                _Rooms[_PlayerLocations[i].Item1, _PlayerLocations[i].Item2].Players.Remove(_Players[i]);
+                _Players.RemoveAt(i);
+                _PlayerLocations.RemoveAt(i);
+            }
+        }
     }
 }

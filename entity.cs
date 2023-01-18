@@ -23,6 +23,10 @@ public class Entity
         _Inventory = inventory;
     
     }
+    public Entity(string saveData)
+    {
+        //trust in the save data
+    }
     public bool AddItem(Items item)
     {
         for (int i = 0; i < _Inventory.Length; i++)

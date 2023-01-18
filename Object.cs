@@ -11,4 +11,9 @@ public class Object : Entity
     {
         return Name + "," + Type + "," + Health + "," + MaxHealth + "," + BaseArmor + "," + BaseDamage + "," + AddArmor + "," + Gold;
     }
+    public string getSaveData()
+    {
+        //use a different delimiter than the one used in the base class
+        return Name + "|" + Type + "|" + Health + "|" + MaxHealth + "|" + BaseArmor + "|" + BaseDamage + "|" + AddArmor + "|" + Gold;
+    }
 }

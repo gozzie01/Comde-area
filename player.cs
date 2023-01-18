@@ -32,7 +32,68 @@ public class Player : Entity
         ID = nextID;
         nextID++;
     }
-    public bool AddArmour(Armour armour)
+    public Player(string playerData)
+    :base(playerData)
+    {
+        _Armour = new Armour?[4];
+        string[] data = playerData.Split(',');
+        Name = data[0];
+        Level = int.Parse(data[1]);
+        Experience = int.Parse(data[2]);
+        Health = int.Parse(data[3]); 
+        MaxHealth = int.Parse(data[4]);
+        Mana = int.Parse(data[5]);
+        MaxMana = int.Parse(data[6]);
+        Strength = int.Parse(data[7]);
+        Dexterity = int.Parse(data[8]);
+        Intelligence = int.Parse(data[9]);
+        BaseArmor = int.Parse(data[10]);
+        BaseDamage = int.Parse(data[11]);
+        Gold = int.Parse(data[12]);
+        if (data[13] != "null")
+        {
+            _Potion = new Consumable(data[13]);
+        }
+        if (data[14] != "null")
+        {
+            _Weapon = new Weapon(data[14]);
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            if (data[15 + i] != "null")
+            {
+                _Armour[i] = new Armour(data[15 + i]);
+            }
+        }
+        ID = nextID;
+        nextID++;
+        //inventory
+        _Inventory = new Items?[10];
+        for (int i = 0; i < 10; i++)
+        {
+            if (data[19 + i] != "null")
+            {
+                string[] sdata = data[19+i].Split("|");
+                if (sdata[0] == "Weapon")
+                {
+                    _Inventory[i] = new Weapon(string.Join( "|", sdata.Skip(1).ToArray()));
+                }
+                else if (sdata[0] == "Armour")
+                {
+                    _Inventory[i] = new Armour(string.Join( "|", sdata.Skip(1).ToArray()));
+                }
+                else if (sdata[0] == "Consumable")
+                {
+                    _Inventory[i] = new Consumable(string.Join( "|", sdata.Skip(1).ToArray()));
+                }
+                else if (sdata[0] == "Item")
+                {
+                    _Inventory[i] = new Items(string.Join( "|", sdata.Skip(1).ToArray()));
+                }
+            }
+        }
+    }
+    public bool equipArmour(Armour armour)
     {
         for (int i = 0; i < _Armour.Length; i++)
         {
@@ -328,4 +389,97 @@ public class Player : Entity
         }
         System.Console.WriteLine();
     }
+    public string getSaveData()
+    {
+        string saveData = "";
+        saveData += Name + ",";
+        saveData += Level + ",";
+        saveData += Experience + ",";
+        saveData += Health + ",";
+        saveData += MaxHealth + ",";
+        saveData += Mana + ",";
+        saveData += MaxMana + ",";
+        saveData += Strength + ",";
+        saveData += Dexterity + ",";
+        saveData += Intelligence + ",";
+        saveData += BaseArmor + ",";
+        saveData += BaseDamage + ",";
+        saveData += Gold + ",";
+        if (_Weapon != null)
+        {
+            saveData += _Weapon.getSaveData() + ",";
+        }
+        else
+        {
+            saveData += "null,";
+        }
+        if (_Potion != null)
+        {
+            saveData += _Potion.getSaveData() + ",";
+        }
+        else
+        {
+            saveData += "null,";
+        }
+        if (_Armour[0] != null)
+        {
+            saveData += _Armour[0].getSaveData() + ",";
+        }
+        else
+        {
+            saveData += "null,";
+        }
+        if (_Armour[1] != null)
+        {
+            saveData += _Armour[1].getSaveData() + ",";
+        }
+        else
+        {
+            saveData += "null,";
+        }
+        if (_Armour[2] != null)
+        {
+            saveData += _Armour[2].getSaveData() + ",";
+        }
+        else
+        {
+            saveData += "null,";
+        }
+        if (_Armour[3] != null)
+        {
+            saveData += _Armour[3].getSaveData() + ",";
+        }
+        else
+        {
+            saveData += "null,";
+        }
+
+        for (int i = 0; i < _Inventory.Length; i++)
+        {
+            if (_Inventory[i] != null)
+            {
+                if (_Inventory[i] is Weapon)
+                {
+                    saveData += "Weapon," + _Inventory[i].getSaveData() + ",";
+                }
+                else if (_Inventory[i] is Armour)
+                {
+                    saveData += "Armour," + _Inventory[i].getSaveData() + ",";
+                }
+                else if (_Inventory[i] is Consumable)
+                {
+                    saveData += "Consumable," + _Inventory[i].getSaveData() + ",";
+                }
+                else
+                {
+                    saveData += "Item" + _Inventory[i].getSaveData() + ",";
+                }
+            }
+            else
+            {
+                saveData += "null,";
+            }
+        }
+        return saveData;
+    }   
 }

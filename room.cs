@@ -27,11 +27,23 @@ public class Room
     }
     public void PrintRoom()
     {
+        int doors = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            if (Bin.GetBit(Exits, i))
+            {
+                doors++;
+            }
+        }
         Console.WriteLine("You are in the " + Name + ".");
         Console.WriteLine(Description);
-        Console.WriteLine("There are " + Exits + " exits.");
+        Console.WriteLine("There are " + doors + " exits.");
         Console.WriteLine("There are " + Objects.Length + " objects.");
         Console.WriteLine("There are " + Enemies.Count + " enemies.");
         Console.WriteLine("There are " + Players.Count + " players.");
+    }
+    public int getEnemyCount()
+    {
+        return Enemies.Count;
     }
 }
