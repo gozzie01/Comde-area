@@ -25,4 +25,13 @@ public class Room
         Enemies = new List<Enemy>();
         Players = new List<Player>();
     }
+    public void PrintRoom()
+    {
+        Console.WriteLine("You are in the " + Name + ".");
+        Console.WriteLine(Description);
+        Console.WriteLine("There are " + Exits + " exits.");
+        Console.WriteLine("There are " + Objects.Length + " objects.");
+        Console.WriteLine("There are " + Enemies.Count + " enemies.");
+        Console.WriteLine("There are " + Players.Count + " players.");
+    }
 }

@@ -17,6 +17,6 @@ public class Items
     //overide ToString() to return the name of the item
     public override string ToString()
     {
-        return Name;
+        return Name+ "," + Value + "," + Weight + "," + Quantity + "," + Tier;
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Riptide;
+using Encoding = System.Text.Encoding;
 public class Program
 {
     public static void Main(string[] args)
@@ -26,12 +27,9 @@ public class Program
         player.AddItem(new Items("apple", 10, 1, 1, 1));
         //print out the stats
         player.printStats();
-        
         //test the dungeon class
         Dungeon dungeon = new Dungeon(10, 10);
         dungeon.Generate();
         dungeon.printDungeon();
-
-
     }
 }

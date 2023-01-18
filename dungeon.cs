@@ -10,6 +10,10 @@ public class Dungeon
     private int _Width;
     private int _Height;
     private int _Area;
+    //create a list of players in the dungeon
+    private List<Player> _Players = new List<Player>();
+    //create a complimentary list of tuples containg x and y values for the location of each player
+    private List<Tuple<int,int>> _PlayerLocations = new List<Tuple<int,int>>();
     public Dungeon(int width, int height)
     {
         _Width = width;
@@ -133,6 +137,29 @@ public class Dungeon
                 }
             }
         }
+        //Generate the items in a chest object
+        //generate 1 chest per room
+        for(int x=0; x<_Rooms.GetLength(0); x++)
+        {
+            for(int y=0; y<_Rooms.GetLength(1); y++)
+            {
+                if(_Rooms[x,y]!=null)
+                {
+                    Items?[] items = new Items?[5];
+                    //generate the items
+                    int numItems = _Rand.Next(1, 5);
+                    for(int i=0; i<numItems; i++)
+                    {
+                        items[i] = Bin.GenerateItem();
+                    
+                    }
+                    items[numItems] = Bin.GenerateWeapon();
+                    Object[] objects = new Object[1];
+                    objects[0] = new Object("chest", "chest", 100, 100, 100, 0, 100, _Rand.Next(0,100), items);
+                    _Rooms[x,y].Objects = objects;
+                }
+            }
+        }
     }
 
     public Room GetRoom(int x, int y)
@@ -158,7 +185,7 @@ public class Dungeon
     public void printDungeon()
     {
         for(int y=0; y<_Rooms.GetLength(1); y++)
-        
+
         {
             for(int x=0; x<_Rooms.GetLength(0); x++)
             {
@@ -182,5 +209,34 @@ public class Dungeon
             }
             Console.WriteLine();
         }
+    }
+    public int addPlayer(Player player, int x, int y)
+    {
+        _Players.Add(player);
+        _Rooms[x,y].Players.Add(player);
+        _PlayerLocations.Add(new Tuple<int,int>(x,y));
+        return player.ID;
+    }
+    public Tuple<int,int>? getPlayerLocation(int ID)
+    {
+        for(int i=0; i<_Players.Count; i++)
+        {
+            if(_Players[i].ID == ID)
+            {
+                return _PlayerLocations[i];
+            }
+        }
+        return null;
+    }
+    public Room getPlayerRoom(int ID)
+    {
+        for(int i=0; i<_Players.Count; i++)
+        {
+            if(_Players[i].ID == ID)
+            {
+                return _Rooms[_PlayerLocations[i].Item1, _PlayerLocations[i].Item2];
+            }
+        }
+        return null;
     }
 }

@@ -8,4 +8,8 @@ public class Weapon : Items
         Damage = damage;
         Heavy = heavy;
     }
+    override public string ToString()
+    {
+        return Name + "," + Value + "," + Weight + "," + Quantity + "," + Tier + "," + Damage + "," + Heavy;
+    }
 } 

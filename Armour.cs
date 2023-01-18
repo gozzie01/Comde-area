@@ -8,4 +8,8 @@ public class Armour : Items
         ArmorStat = armor;
         Heavy = heavy;
     }
+    override public string ToString()
+    {
+        return Name + "," + Value + "," + Weight + "," + Quantity + "," + Tier + "," + ArmorStat + "," + Heavy;
+    }
 }

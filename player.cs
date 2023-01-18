@@ -13,6 +13,9 @@ public class Player : Entity
     protected Consumable? _Potion;
     protected Weapon? _Weapon;
     protected Armour?[] _Armour;
+    public int ID;
+    private static int nextID = 0;
+    
     public Player(string name, Consumable? potion, int health, int mana, int maxmana, int maxHealth, int level, int experience, int strength, int dexterity, int intelligence, int baseArmor, int baseDamage, int addArmor, int gold, Weapon? weapon, Armour?[] armour, Items?[] inventory)
     :base(name, health, maxHealth, baseArmor, baseDamage, addArmor, gold, inventory)
     {
@@ -26,6 +29,8 @@ public class Player : Entity
         _Potion = potion;
         _Weapon = weapon;
         _Armour = armour;
+        ID = nextID;
+        nextID++;
     }
     public bool AddArmour(Armour armour)
     {
@@ -313,9 +318,14 @@ public class Player : Entity
         Console.WriteLine("Weapon: " + _Weapon);
         Console.WriteLine("Potion: " + _Potion);
         Console.WriteLine("Armour: " + _Armour[0] + " " + _Armour[1] + " " + _Armour[2]);
+        Console.Write("Inventory: ");
         for (int i = 0; i < _Inventory.Length; i++)
         {
-            Console.WriteLine("Inventory: " + _Inventory[i]);
+            if (_Inventory[i] != null)
+            {
+                Console.Write(" "+_Inventory[i]);
+            }   
         }
+        System.Console.WriteLine();
     }
 }

@@ -8,4 +8,8 @@ public class Consumable : Items
         Health = health;
         Mana = mana;
     }
+    override public string ToString()
+    {
+        return Name + "," + Value + "," + Weight + "," + Quantity + "," + Tier + "," + Health + "," + Mana;
+    }
 }

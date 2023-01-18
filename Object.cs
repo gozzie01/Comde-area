@@ -7,4 +7,8 @@ public class Object : Entity
     {
         Type = type;
     }
+    override public string ToString()
+    {
+        return Name + "," + Type + "," + Health + "," + MaxHealth + "," + BaseArmor + "," + BaseDamage + "," + AddArmor + "," + Gold;
+    }
 }
