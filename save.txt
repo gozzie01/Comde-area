@@ -1,3 +1,3 @@
-john,1,0,100,100,100,100,10,10,10,25,10,1000,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
+john,1,0,100,100,100,100,10,10,10,25,10,1000,null,null,null,null,null,null,Weapon|sword|10|1|1|1,null,null,null,null,null,null,null,null,null,
 10,10,GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGDGGGGGDGGGGGGGGGGGDGGGGGGGGGGGGGGG
 3,3

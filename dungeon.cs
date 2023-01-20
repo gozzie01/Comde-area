@@ -210,9 +210,12 @@ public class Dungeon
             Console.WriteLine();
         }
     }
-    public int addPlayer(Player player, int x, int y)
+    public int addPlayer(Player player)
     {
         _Players.Add(player);
+        int x = 0;
+        //y should be the middle of the dungeon
+        int y = _Rooms.GetLength(1)/2;
         _Rooms[x,y].Players.Add(player);
         _PlayerLocations.Add(new Tuple<int,int>(x,y));
         return player.ID;

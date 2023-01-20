@@ -18,8 +18,8 @@ public class Weapon : Items
         Weight = int.Parse(data[2]);
         Quantity = int.Parse(data[3]);
         Tier = int.Parse(data[4]);
-        Damage = int.Parse(data[5]);
-        Heavy = bool.Parse(data[6]);
+        Damage = 10;
+        Heavy = false;
     }
     override public string ToString()
     {

@@ -1,5 +1,4 @@
 //player should have stats like a dnd character but have an inventory of 40 slots and 4 armor slots and a weapon slot as well as a potion slot for a potion that can be used mid battle
-
 namespace RPG;
 public class Player : Entity
 {
@@ -74,9 +73,11 @@ public class Player : Entity
             if (data[19 + i] != "null")
             {
                 string[] sdata = data[19+i].Split("|");
+                System.Console.WriteLine(data[19+i]);
+                System.Console.WriteLine(string.Join( '|', sdata.Skip(1)));
                 if (sdata[0] == "Weapon")
                 {
-                    _Inventory[i] = new Weapon(string.Join( "|", sdata.Skip(1).ToArray()));
+                    _Inventory[i] = new Weapon(string.Join( '|', sdata.Skip(1)));
                 }
                 else if (sdata[0] == "Armour")
                 {
@@ -388,6 +389,7 @@ public class Player : Entity
             }   
         }
         System.Console.WriteLine();
+        Console.ReadKey();
     }
     public string getSaveData()
     {
@@ -460,19 +462,19 @@ public class Player : Entity
             {
                 if (_Inventory[i] is Weapon)
                 {
-                    saveData += "Weapon," + _Inventory[i].getSaveData() + ",";
+                    saveData += "Weapon|" + _Inventory[i].getSaveData() + ",";
                 }
                 else if (_Inventory[i] is Armour)
                 {
-                    saveData += "Armour," + _Inventory[i].getSaveData() + ",";
+                    saveData += "Armour|" + _Inventory[i].getSaveData() + ",";
                 }
                 else if (_Inventory[i] is Consumable)
                 {
-                    saveData += "Consumable," + _Inventory[i].getSaveData() + ",";
+                    saveData += "Consumable|" + _Inventory[i].getSaveData() + ",";
                 }
                 else
                 {
-                    saveData += "Item" + _Inventory[i].getSaveData() + ",";
+                    saveData += "Item|" + _Inventory[i].getSaveData() + ",";
                 }
             }
             else

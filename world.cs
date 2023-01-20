@@ -56,6 +56,19 @@ public class World
                 }
             }
         }
+        //generate the dungeons
+        for (int i = 0; i < _xSize; i++)
+        {
+            for (int j = 0; j < _ySize; j++)
+            {
+                if (_World[i, j].getType() == "dungeon")
+                {
+                    _Dungeon.Add(new Dungeon(10, 10));
+                    _Dungeon[_Dungeon.Count - 1].Generate();
+                    _World[i, j].setDID(_Dungeon.Count - 1);
+                }
+            }
+        }
     }
     public void PrintWorld(int x, int y)
     {
@@ -96,6 +109,10 @@ public class World
             }
             Console.WriteLine();
         }
+    }
+    public void PrintWorld(int x, int y,int SubX,int SubY)
+    {
+        _World[x, y].printTile(SubX, SubY);
     }
     public Tile getTile(int x, int y)
     {

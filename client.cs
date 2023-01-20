@@ -8,6 +8,8 @@ class Client
     private World _World;
     private int _X;
     private int _Y;
+    private int _XInTile;
+    private int _YInTile;
     public Client()
     {
         //init new or load
@@ -26,6 +28,8 @@ class Client
             Console.WriteLine("Invalid input");
             Environment.Exit(0);
         }
+        _XInTile = 0;
+        _YInTile = 0;
     }
     public void initNew()
     {
@@ -46,7 +50,7 @@ class Client
     {
         Dungeon _Dungeon = _World.getDungeon(DID);
         //add player to the dungeon
-        int ID = _Dungeon.addPlayer(_Player, 0, _Dungeon.getYsize()/2);
+        int ID = _Dungeon.addPlayer(_Player);
         //get info about the current room
         bool playing = true;
         while(playing)
@@ -82,7 +86,7 @@ class Client
                             break;
                     }
                     break;
-                case "quit":
+                case "exit":
                     if (_Dungeon.getPlayerRoom(ID).getEnemyCount() == 0)
                     {
                         //remove the player from the dungeon
@@ -118,15 +122,17 @@ class Client
         }
         bool playing = true;
         _World.PrintWorld(x, y);
+        string output = "";
         while(playing)
         {
             Console.Clear();
-            _World.PrintWorld(x, y);
+            _World.PrintWorld(x, y, _XInTile, _YInTile);
             //print out the world
             //get the input
             string input = Console.ReadLine();
             //parse the input
             string[] inputArray = input.Split(' ');
+            System.Console.WriteLine(output);
             //check the input
             switch(inputArray[0])
             {
@@ -136,22 +142,42 @@ class Client
                     {
                         //using the movePlayer function and the standard directions set in the generate doors
                         case "north":
-                            y++;
+                            _YInTile++;
+                            if(_YInTile > 40 && y < 9)
+                            {
+                                _YInTile = 0;
+                                y++;
+                            }
                             break;
                         case "south":
-                            y--;
+                            _YInTile--;
+                            if(_YInTile < 0 && y > 0)
+                            {
+                                _YInTile = 40;
+                                y--;
+                            }
                             break;
                         case "east":
-                            x++;
+                            _XInTile++;
+                            if(_XInTile > 40 && x < 9)
+                            {
+                                _XInTile = 0;
+                                x++;
+                            }
                             break;
                         case "west":
-                            x--;
+                            _XInTile--;
+                            if(_XInTile < 0 && x > 0)
+                            {
+                                _XInTile = 40;
+                                x--;
+                            }
                             break;
                     }
                     break;
                 case "enter":
                     //enter the dungeon
-                    if(_World.getTile(x, y).getType() == "dungeon")
+                    if(_World.getTile(x, y).getSubTiles()[_XInTile,_YInTile].getType() == "dungeon")
                     {
                         PlayDungeon(_World.getTile(x, y).getDID());
                     }
@@ -163,6 +189,41 @@ class Client
                     break;
                 case "stats":
                     _Player.printStats();
+                    break;
+                case "cheat":
+                    switch (inputArray[1])
+                    {
+                        case "gold":
+                            _Player.addGold(1000);
+                            break;
+                        case "health":
+                            _Player.addHealth(1000);
+                            break;
+                        case "mana":
+                            _Player.addMana(1000);
+                            break;
+                        case "exp":
+                            _Player.addExp(1000);
+                            break;
+                        case "give":
+                            switch (inputArray[2])
+                            {
+                                case "sword":
+                                    _Player.AddItem(new Weapon("sword", 10, 1, 1, 1, 10, false));
+                                    break;
+                                case "shield":
+                                    _Player.AddItem(new Items("shield", 10, 1, 1, 1));
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case "map":
+                    _World.PrintWorld(x, y);
+                    Console.ReadKey();
+                    break;
+                default:
+                    output = ("Invalid input");
                     break;
             }
             _X = x;
